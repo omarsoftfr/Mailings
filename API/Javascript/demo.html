@@ -1,0 +1,164 @@
+<!--
+create by: omarsoft.fr
+Sébastien Filaumart
+web: http://www.omarsoft.fr
+Mailings: http://www.omarsoft.fr/mailings
+Description: fichier demonstration pour l'utilisation de l'API javascript Mailings
+-->
+
+
+<html>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script>
+$(function(){
+	//déclaration des variables obligatoire
+	var url = 'http://www.omarsoft.fr/mailings/ajax/api.php'
+	var userid = '';
+	var keyapi = "";
+	
+	//liste des contacts
+	$.post(url,{action:"listcontacts",userid:userid,keyapi:keyapi},function(data){
+		if(data.connexion!="echec"){	
+			if(data.requete=="success"){
+					console.log(data);
+					alert("La liste de contacts est chargé");
+			}
+			else if(data.erreur=="nodata"){ alert("Erreur lors du chargement de la liste de contacts");}
+		}else alert("Echec de la connexion utilisateur");
+	},"json");
+	
+	//déclaration des variables d'ajout d'un utilisateur a vos contacts
+	var name = 'test';
+	var prenom = 'test';
+	var societe = 'test';
+	var mail = 'test.test@test.com';
+	var phone = '0692123456';
+	var zone = '2'; //autre
+	var groupe = '3'; //particulier
+	
+	if(verifmail(mail)){
+		//ajout d'un contact
+		$.post(url,{action:"addcontact",userid:userid,keyapi:keyapi,name:name,prenom:prenom,societe:societe,mail:mail,phone:phone,zone:zone,groupe:groupe},function(data){
+			if(data.connexion!="echec"){
+				if(data.requete=="success"){
+					console.log(data);
+					alert("Le contact a bien été ajouté");
+				}
+				else alert("Erreur lors de l'ajout du contact");
+			}else alert("Echec de la connexion utilisateur");
+		},"json");
+	}else alert("Votre adresse email est incorrect");
+	
+	//déclaration des variables d'ajout d'un utilisateur a vos contacts
+	var ville = 'test';
+	
+	//ajout d'une zone (ville)
+	$.post(url,{action:"addzone",userid:userid,keyapi:keyapi,ville:ville},function(data){
+			if(data.connexion!="echec"){
+				if(data.requete=="success"){
+					console.log(data);
+					alert("La ville a bien été ajouté");
+				}
+				else alert("Erreur lors de l'ajout de la ville");
+			}else alert("Echec de la connexion utilisateur");
+		},"json");
+	
+	//déclaration des variables de modification d'un utilisateur de vos contacts
+	var id = '0'; // id du contact 
+	var name = 'test';
+	var prenom = 'test';
+	var societe = 'test';
+	var mail = 'test.test@test.com';
+	var phone = '0692123456';
+	var zone = '2'; //autre
+	var groupe = '3'; //particulier
+	
+	if(verifmail(mail) && id!='' && id!='0'){
+		//modification d'un contact
+		$.post(url,{action:"modifcontact",userid:userid,keyapi:keyapi,id:id,name:name,prenom:prenom,societe:societe,mail:mail,phone:phone,zone:zone,groupe:groupe},function(data){
+			if(data.connexion!="echec"){
+				if(data.requete=="success"){
+					console.log(data);
+					alert("Le contact a bien été modifié");
+				}
+				else alert("Erreur lors de la modification du contact");
+			}else alert("Echec de la connexion utilisateur");
+		},"json");
+	}else alert("Votre adresse email est incorrect / Identifiant du contact erroné");
+	
+	//déclaration des variables de récupération d'un utilisateur de vos contacts
+	var id = '1'; // id du contact a récupéré
+	
+	if(id!='' && id!='0'){
+	//recuperé un contact avec son id
+		$.post(url,{action:"RecupContactWithId",userid:userid,keyapi:keyapi,id:id},function(data){
+			if(data.connexion!="echec"){
+				if(data.requete=="success"){
+					console.log(data);
+					alert("Le contact a bien été récupéré");
+				}
+				else alert("Erreur lors de la récupération du contact");
+			}else alert("Echec de la connexion utilisateur");
+		},"json");
+	}else alert("Identifiant du contact erroné");
+	
+	//déclaration des variables de récupération d'un utilisateur de vos contacts
+	var idgroupecontact = '2'; // id du groupe de contact a récupéré
+	
+	if(idgroupecontact=!'' && idgroupecontact!='0'){
+	//recuperé un contact avec son id
+		$.post(url,{action:"selectgroupcontacts",userid:userid,keyapi:keyapi,idgroupecontact:idgroupecontact},function(data){
+			if(data.connexion!="echec"){
+				if(data.requete=="success"){
+					console.log(data);
+					alert("Le groupe de contact a bien été récupéré");
+				}
+				else alert("Erreur lors de la récupération du groupe de contact");
+			}else alert("Echec de la connexion utilisateur");
+		},"json");
+	}else alert("Identifiant du groupe de contact erroné");
+	
+	//déclaration des variables de recherche d'un contacts
+	var search = 'filaumart'; //variable de recherche
+	
+	if(search!='' && search!='0'){
+	//faire une recherche d'un contact
+		$.post(url,{action:"search",userid:userid,keyapi:keyapi,search:search},function(data){
+			if(data.connexion!="echec"){
+				if(data.requete=="success"){
+					if(data.results!="noresult"){
+						console.log(data);
+						alert("La recherche a bien été effectué");
+					}else alert("Aucun résultat pour votre recherche");
+				}
+				else alert("Erreur lors de la recherche du contact");
+			}else alert("Echec de la connexion utilisateur");
+		},"json");
+	}else alert("Valeur de recherche de contact erroné");
+	
+	//déclaration des variables de suppression d'un de vos contacts
+	var id = '0'; // id du contact a supprimer
+	
+	if(id!='' && id!='0'){
+	//recuperé un contact avec son id
+		$.post(url,{action:"deletecontact",userid:userid,keyapi:keyapi,id:id},function(data){
+			if(data.connexion!="echec"){
+				if(data.requete=="success"){
+					console.log(data);
+					alert("Le contact a bien été supprimer");
+				}
+				else alert("Erreur lors de la suppression du contact");
+			}else alert("Echec de la connexion utilisateur");
+		},"json");
+	}else alert("Identifiant du contact erroné pour la suppréssion");
+	
+	
+	function verifmail(mail)
+	{
+		var reg = new RegExp('^[a-z0-9]+([_|\.|-]{1}[a-z0-9]+)*@[a-z0-9]+([_|\.|-]{1}[a-z0-9]+)*[\.]{1}[a-z]{2,6}$', 'i');
+		return(reg.test(mail));
+	}
+	
+});
+</script>
+</html>
